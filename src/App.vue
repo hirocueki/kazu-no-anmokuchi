@@ -1,15 +1,30 @@
 <template>
-  <Questions />
+  <div>
+    <Timer :duration="30" @handle-changed="handleChanged" />
+    <div v-show="timerStarted">
+      <Questions />
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import Questions from "./components/Questions.vue";
+import Timer from "./components/Timer.vue";
 
 export default defineComponent({
   name: "App",
   components: {
     Questions,
+    Timer,
+  },
+  setup() {
+    const timerStarted = ref(false);
+    const handleChanged = (started: boolean) => {
+      timerStarted.value = started;
+      console.log(started);
+    };
+    return { timerStarted, handleChanged };
   },
 });
 </script>
