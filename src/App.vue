@@ -1,8 +1,17 @@
 <template>
   <div>
-    <Timer :duration="30" @handle-changed="handleChanged" />
-    <div v-show="timerStarted">
-      <Questions />
+    <Timer :duration="3" @timer-changed="handleTimerChanged" />
+    <button
+      @click="
+        () => {
+          showAnswer = true;
+        }
+      "
+    >
+      こたえをみる
+    </button>
+    <div v-show="timerStatus !== 'ready'">
+      <Questions :showAnswer="showAnswer" />
     </div>
   </div>
 </template>
@@ -11,6 +20,7 @@
 import { defineComponent, ref } from "vue";
 import Questions from "./components/Questions.vue";
 import Timer from "./components/Timer.vue";
+import { TimerStatus } from "./hooks/useTimer";
 
 export default defineComponent({
   name: "App",
@@ -19,12 +29,12 @@ export default defineComponent({
     Timer,
   },
   setup() {
-    const timerStarted = ref(false);
-    const handleChanged = (started: boolean) => {
-      timerStarted.value = started;
-      console.log(started);
+    const timerStatus = ref<TimerStatus>("ready");
+    const showAnswer = ref(false);
+    const handleTimerChanged = (status: TimerStatus) => {
+      timerStatus.value = status;
     };
-    return { timerStarted, handleChanged };
+    return { timerStatus, handleTimerChanged, showAnswer };
   },
 });
 </script>

@@ -1,8 +1,10 @@
 import { ref } from "vue";
+export type TimerStatus = "ready" | "running" | "paused" | "ended";
 export function useTimer(initDuration: number) {
+  const initVal = initDuration;
   const duration = ref(initDuration);
-  const started = ref(false);
   const timer = ref(0);
+  const status = ref<TimerStatus>("ready");
   const countDown = () => {
     console.log(duration.value);
     --duration.value;
@@ -11,14 +13,23 @@ export function useTimer(initDuration: number) {
     }
   };
   const startTimer = () => {
-    started.value = true;
+    status.value = "running";
     timer.value = setInterval(() => {
       countDown();
     }, 1000);
   };
   const stopTimer = () => {
-    started.value = false;
+    status.value = "ended";
     clearInterval(timer.value);
+  };
+  const pauseTimer = () => {
+    status.value = "paused";
+    clearInterval(timer.value);
+  };
+  const resetTimer = () => {
+    clearInterval(timer.value);
+    status.value = "ready";
+    duration.value = initVal;
   };
   const formatDuration = () => {
     return `${Math.floor(duration.value / 60)}: ${(
@@ -26,5 +37,13 @@ export function useTimer(initDuration: number) {
       (duration.value % 60)
     ).slice(-2)}`;
   };
-  return { duration, started, startTimer, stopTimer, formatDuration };
+  return {
+    duration,
+    status,
+    startTimer,
+    stopTimer,
+    pauseTimer,
+    resetTimer,
+    formatDuration,
+  };
 }

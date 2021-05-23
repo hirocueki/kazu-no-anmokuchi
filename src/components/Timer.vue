@@ -1,8 +1,11 @@
 <template>
-  <div>
-    <button v-show="!started" @click="handleStarted()">はじめる</button>
-    <button v-show="started" @click="handleStopped()">とめる</button>
-    <div v-text="formatDuration()"></div>
+  <div class="timer">
+    <button v-show="status !== 'ended'" @click="toggleTimer()">はじめる</button>
+    <button v-show="status == 'ended'" @click="resetTimer()">リセット</button>
+    <button :disabled="status !== 'running'" @click="handlePaused()">
+      とめる
+    </button>
+    <div class="timer-duration" v-text="formatDuration()"></div>
   </div>
 </template>
 
@@ -30,21 +33,57 @@ export default defineComponent({
     },
   },
   setup: (props, { emit }) => {
+    const {
+      status,
+      startTimer,
+      pauseTimer,
+      stopTimer,
+      resetTimer,
+      formatDuration,
+    } = useTimer(props.duration);
+    const toggleTimer = () => {
+      if (status.value === "running") {
+        pauseTimer();
+      } else if (["ready", "paused"].includes(status.value)) {
+        startTimer();
+        console.log("started");
+      }
+      emit("timer-changed", status);
+    };
     const handleStarted = () => {
       startTimer();
-      emit("handle-changed", true);
+      emit("timer-changed", status);
       console.log(emit);
     };
-    const handleStopped = () => {
+    const handlePaused = () => {
       stopTimer();
-      emit("handle-changed", false);
+      emit("timer-changed", status);
     };
-    const { started, startTimer, stopTimer, formatDuration } = useTimer(
-      props.duration
-    );
-    return { formatDuration, handleStarted, handleStopped, started };
+
+    return {
+      formatDuration,
+      toggleTimer,
+      handleStarted,
+      handlePaused,
+      status,
+      resetTimer,
+    };
   },
 });
 </script>
 
-<style></style>
+<style scoped>
+.timer {
+  padding: 10px 30px;
+  position: fixed;
+  top: 5px;
+  right: 40px;
+  background: rgba(200, 200, 200, 0.4);
+  border: 1px rgba(200, 200, 200, 0.4) solid;
+  border-radius: 6px;
+}
+.timer-duration {
+  font-size: 24px;
+  font-weight: 500;
+}
+</style>
