@@ -1,15 +1,37 @@
+import { random } from "lodash";
 export type Question = {
   no: number;
   num1: number;
   num2: number;
-  operation: "+" | "-";
+  operation: "+" | "-" | "×";
+  operator: "+" | "-" | "*";
   answer: () => number;
 };
-function getRandomInt(max: number) {
-  return Math.floor(Math.random() * max);
-}
-function getRandomOperation() {
-  return Math.floor(Math.random() * 2) % 2 ? "+" : "-";
+
+function generateQuestion() {
+  switch (random(1, 3)) {
+    case 1:
+      return {
+        num1: random(1, 99),
+        num2: random(1, 99),
+        operation: "+",
+        operator: "+",
+      };
+    case 2:
+      return {
+        num1: random(50, 99),
+        num2: random(1, 50),
+        operation: "-",
+        operator: "-",
+      };
+    case 3:
+      return {
+        num1: random(1, 9),
+        num2: random(1, 9),
+        operation: "×",
+        operator: "*",
+      };
+  }
 }
 export function useQuestion(count = 10) {
   let i = 0;
@@ -17,11 +39,9 @@ export function useQuestion(count = 10) {
   while (i++ < count) {
     const q = {
       no: i,
-      num1: getRandomInt(200),
-      num2: getRandomInt(50),
-      operation: "+", //getRandomOperation(),
+      ...generateQuestion(),
     } as Question;
-    (q.answer = eval(`${q.num1}${q.operation}${q.num2}`)), questions.push(q);
+    (q.answer = eval(`${q.num1}${q.operator}${q.num2}`)), questions.push(q);
   }
   return { questions };
 }

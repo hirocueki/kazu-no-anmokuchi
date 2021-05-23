@@ -48,21 +48,21 @@ body {
 }
 .questions-columns {
   display: flex;
-  flex-wrap: wrap;
+  overflow-x: scroll;
+  margin-right: 200px;
+  box-shadow: 1px 0px 4px;
 }
 .questions-column {
-  border-top: 2px dashed gray;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 1rem;
   margin-right: 3px;
   margin-bottom: 3px;
 }
 .question-box {
   display: flex;
   align-items: baseline;
-  padding: 20px 40px;
+  padding: 20px 20px;
   border-bottom: 1px solid #f5f5f5;
 }
 .question-number {
@@ -74,8 +74,8 @@ body {
 .question {
   width: 5rem;
   font-weight: 500;
-  font-size: 18px;
-  width: 90px;
+  font-size: 24px;
+  width: 120px;
 }
 .odd {
   background: #fafafa;
