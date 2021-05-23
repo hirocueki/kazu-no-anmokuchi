@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Timer :duration="3" @timer-changed="handleTimerChanged" />
+    <Timer :duration="180" @timer-changed="handleTimerChanged" />
     <button
       @click="
         () => {
